@@ -24,15 +24,15 @@ void main(List<String> arguments) {
           shoppingmall.showTotal();
           break;
         case 4:
-          print('프로그램을 종료합니다.');
+          print('이용해 주셔서 감사합니다 ~ 안녕히 가세요 !');
           onOf = false;
           break;
         default:
-          print('유효하지 않은 숫자입니다.');
+          print('지원하지 않는 기능입니다 ! 다시 시도해주세요 ..');
       }
     }
     else{
-      print('입력이 잘못되었습니다.');
+      print('지원하지 않는 기능입니다 ! 다시 시도해주세요 ..');
     }
   }
 }
@@ -82,7 +82,8 @@ class ShoppingMall {
       String? inputNumString = stdin.readLineSync();
       inputNum = int.parse(inputNumString!);
       if(inputNum <= 0){
-        throw Exception();
+        print("0개보다 많은 개수의 상품만 담을 수 있어요 !");
+        return;
       }
     }
     catch(e){
@@ -100,6 +101,8 @@ class ShoppingMall {
     else{
       shoppingCart[inputName] = getPrice;
     }
+
+    print("장바구니에 상품이 담겼어요 !");
   }
 
   showTotal(){

@@ -1,17 +1,16 @@
-//import 'package:shoppingmall/shoppingmall.dart' as shoppingmall;
 import 'dart:io';
+import 'ui.dart';
 
 void main(List<String> arguments) {
   ShoppingMall shoppingmall = ShoppingMall();
   Ui ui = Ui();
-  bool onOf = true;
   
-  while(onOf){
+  while(shoppingmall.onOf){
     ui.showIndex();
     print("메뉴 번호를 입력해 주세요 !");
-    String? input = stdin.readLineSync();
-    if(input != null){
-      int inputNum = int.parse(input);
+    try{
+      String? input = stdin.readLineSync();
+      int inputNum = int.parse(input!); //유효하지 않은 값 입력시 catch문 실행
 
       switch (inputNum) {
         case 1:
@@ -21,35 +20,26 @@ void main(List<String> arguments) {
           shoppingmall.addToCart();
           break;
         case 3:
-          shoppingmall.showTotal();
+          shoppingmall.showCart();
           break;
         case 4:
-          print('이용해 주셔서 감사합니다 ~ 안녕히 가세요 !');
-          onOf = false;
+          shoppingmall.shopClose();
+          break;
+        case 6:
+          shoppingmall.resetCart();
           break;
         default:
           print('지원하지 않는 기능입니다 ! 다시 시도해주세요 ..');
-      }
+      } 
     }
-    else{
+    catch(e){
       print('지원하지 않는 기능입니다 ! 다시 시도해주세요 ..');
     }
   }
 }
 
-class Ui{
-  showIndex(){
-    String line = '-';
-    for(int i = 0; i <= 100; i++){
-      line += '-';
-    }
-    print(line);
-    print('[1] 상품 목록 보기 / [2] 장바구니에 담기 / [3] 장바구니에 담긴 상품의 총 가격 보기 / [4] 프로그램 종료');
-    print(line);
-  }
-}
-
 class ShoppingMall {
+  bool onOf = true;
   List<Product> Products = [Product('shirt', 45000), Product('skirt', 30000), Product('outer', 35000), Product('pants', 38000), Product('socks', 5000)];
   // 윈도우 환경 오류로 품목을 한글에서 영문으로 변경
   Map<String, int> shoppingCart = {};
@@ -105,19 +95,45 @@ class ShoppingMall {
     print("장바구니에 상품이 담겼어요 !");
   }
 
-  showTotal(){
-    int sum;
-    try{ //장바구니에 담지 않고 함수가 호출되었을 시 오류 발생
-      sum = shoppingCart.values.reduce((a, b) => a + b);
+  showCart(){
+    if(shoppingCart.isEmpty){
+      print('장바구니에 담긴 상품이 없습니다.');
     }
-    catch(e){
-      sum = 0;
+    else{
+      for(String cName in shoppingCart.keys){
+        int? cPrice = shoppingCart[cName];
+        print('$cName : $cPrice원');
+      }
+      String totalName = shoppingCart.keys.join(', ');
+      int totalPrice = shoppingCart.values.reduce((a, b) => a + b);
+      print('장바구니에 $totalName 상품이 담겨있네요. 총 $totalPrice원 입니다!');
     }
-    print("장바구니에 $sum원 어치를 담으셨네요 !");
+  }
 
+  shopClose(){ //종료 재확인
+    print('정말 종료하시겠습니까?( [5] : 종료 )');
+    String? close = stdin.readLineSync();
+    if(close != '5'){
+      print('종료하지 않습니다.');
+    }
+    else{
+      print('이용해 주셔서 감사합니다.');
+      onOf = false;
+    }
+  }
+
+  resetCart(){ //장바구니 비우기
+    if(shoppingCart.isEmpty){
+      print('이미 장바구니가 비어있습니다.');
+    }
+    else{
+      print('장바구니를 초기화 합니다.');
+      shoppingCart = {};
+    }
   }
 }
 
+//상품 정보 저장 양식
 class Product {
   String pName;
   int pPrice;

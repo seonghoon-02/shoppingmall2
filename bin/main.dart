@@ -40,7 +40,7 @@ void main(List<String> arguments) {
 class Ui{
   showIndex(){
     String line = '-';
-    for(int i = 0; i <= 94; i++){
+    for(int i = 0; i <= 100; i++){
       line += '-';
     }
     print(line);
